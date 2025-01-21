@@ -1,3 +1,13 @@
+== Rendu
+
+Le projet doit être rendu sous la forme d'un repository (gitlab ou github)
+
+Le projet est à faire maximum en trinôme.
+
+Vous pouvez ajouter un README si vous avez un choix à justifier ou un blocage.
+
+Il doit être rendu au plus tard le 8 février à 23h59
+
 == Sujet
 
 Le but de ce projet est de créer 3 services pour faire de la gestion de stock magasin.
