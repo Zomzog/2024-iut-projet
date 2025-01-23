@@ -1,19 +1,12 @@
-package iut.nantes.project.products.controler
+package iut.nantes.project.products.controller
 
 import iut.nantes.project.products.DatabaseProxy
-import iut.nantes.project.products.FamilleJpa
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PutMapping
-import org.springframework.web.bind.annotation.DeleteMapping
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.*
 
+@RestController
 class FamilleController(val db: DatabaseProxy){
-
-
     @PostMapping("/api/v1/families")
     fun createFamille(@RequestBody famille: FamilleDto): ResponseEntity<Any> {
         val violations = db.validateFamille(famille)
@@ -53,7 +46,9 @@ class FamilleController(val db: DatabaseProxy){
         if (id != famille.id){
             return ResponseEntity.badRequest().body("Les IDs de famille ne correspondent pas")
         }
-        val previous = db.findFamilleById(id) ?: return ResponseEntity.badRequest().body("La famille n'existe pas")
+        if(db.findFamilleById(id)== null){
+            return ResponseEntity.badRequest().body("La famille n'existe pas")
+        }
         val violations = db.validateFamille(famille)
         if (violations.isNotEmpty()) {
             return ResponseEntity.badRequest().body(violations)

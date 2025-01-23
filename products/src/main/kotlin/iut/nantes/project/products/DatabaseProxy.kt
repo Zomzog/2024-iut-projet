@@ -1,11 +1,10 @@
 package iut.nantes.project.products
 
-import iut.nantes.project.products.controler.FamilleDto
-
+import iut.nantes.project.products.controller.FamilleDto
+import iut.nantes.project.products.controller.ProductDto
 
 private fun FamilleDto.toEntity() = FamilleEntity(id,name, description)
 private fun FamilleEntity.toDto(): FamilleDto = FamilleDto(id,name,description)
-
 
 class DatabaseProxy(private val familleJpa: FamilleJpa) {
     fun saveFamille(famille: FamilleDto): FamilleDto {
@@ -52,6 +51,36 @@ class DatabaseProxy(private val familleJpa: FamilleJpa) {
     }
 
     fun findProductByFamilleId(id: String): FamilleDto? {
+        TODO()
+    }
+
+    fun validateProduct(produit: ProductDto): List<String> {
+        val errors = mutableListOf<String>()
+
+        if (produit.name.isBlank() || produit.name.length !in 2..20) {
+            errors.add("Le nom doit contenir entre 2 et 20 caractères.")
+        }
+
+        if (produit.description.isBlank() || produit.description.length !in 5..100) {
+            errors.add("La description doit contenir entre 5 et 100 caractères.")
+        }
+
+        if (produit.description.isBlank() || produit.description.length !in 5..100) {
+            errors.add("La description doit contenir entre 5 et 100 caractères.")
+        }
+
+        if (produit.price.amount <= 0) {
+            errors.add("Le montant du prix doit être positif.")
+        }
+
+        if (!produit.price.currency.matches(Regex("^[A-Z]{3}$"))) {
+            errors.add("La devise doit être composée de 3 caractères alphabétiques majuscules (ex: EUR).")
+        }
+
+        return errors
+    }
+
+    fun saveProduct(product: ProductDto): ProductDto {
         TODO()
     }
 

@@ -1,6 +1,5 @@
 package iut.nantes.project.products
 
-import iut.nantes.project.products.controler.FamilleDto
 import jakarta.persistence.*
 import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.Size
@@ -15,7 +14,7 @@ interface FamilleJpa: JpaRepository<FamilleEntity, Int> {
 }
 
 @Entity
-@Table(name = "FAMILLE", uniqueConstraints = [UniqueConstraint(columnNames = ["name"])])
+@Table(name = "FAMILLES", uniqueConstraints = [UniqueConstraint(columnNames = ["name"])])
 data class FamilleEntity(
     @Id
     val id: String = UUID.randomUUID().toString(),
