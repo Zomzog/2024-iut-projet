@@ -7,7 +7,11 @@ import jakarta.validation.constraints.Size
 import org.springframework.data.jpa.repository.JpaRepository
 import java.util.UUID
 
-interface FamilleJpa: JpaRepository<FamilleDto, UUID> {
+interface FamilleJpa: JpaRepository<FamilleEntity, Int> {
+    fun findByName(name: String): FamilleEntity?
+    fun findById(id: String): FamilleEntity?
+    fun existsById(id: String): Boolean
+    fun deleteById(id: String)
 }
 
 @Entity
