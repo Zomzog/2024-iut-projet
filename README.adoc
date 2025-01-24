@@ -29,7 +29,7 @@ Contraintes :
 ** La couche `service` qui fait la logique métier.
 ** La couche `repository` qui fait la gestion de la base de donnée (ça peut être le repository JPA).
 
-=== Famille
+=== Famille 🟠
 
 Une famille se présente sous la forme suivante :
 
