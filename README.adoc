@@ -14,7 +14,7 @@ par exemple s'il est demandé une base de donnée h2, il vaut mieux une version 
 
 La liste des APIs doit inclure au minimum les endpoints demandés, mais il est possible d'en ajouter d'autres si nécessaire.
 
-== Products
+== Products :check:
 
 Le service Products est un service qui permet de gérer des familles de produits et les produits associés.
 
