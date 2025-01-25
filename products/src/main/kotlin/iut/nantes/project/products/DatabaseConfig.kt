@@ -1,5 +1,6 @@
 package iut.nantes.project.products
 
+import iut.nantes.project.products.Entity.ProductEntity
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Profile
