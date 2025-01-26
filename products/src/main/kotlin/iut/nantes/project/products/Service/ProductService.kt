@@ -4,10 +4,8 @@ import iut.nantes.project.products.DTO.ProductDTO
 import iut.nantes.project.products.Entity.ProductEntity
 import iut.nantes.project.products.Repository.FamilyRepository
 import iut.nantes.project.products.Repository.ProductRepository
-import org.springframework.stereotype.Service
 import java.util.*
 
-@Service
 class ProductService(private val productRepository: ProductRepository, private val familyRepository: FamilyRepository) {
 
     fun createProduct(productDto: ProductDTO): ProductDTO {

@@ -12,10 +12,7 @@ data class FamilyEntity(
     var name: String,
     var description: String,
 
-    @OneToMany(mappedBy = "family", cascade = [CascadeType.ALL])
-    val products: List<ProductEntity> = mutableListOf()
 ) {
-    constructor() : this(UUID.randomUUID(), "", "", mutableListOf())
 
     fun toDto() = FamilyDTO(id, name, description)
 }
