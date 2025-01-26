@@ -1,4 +1,4 @@
-package iut.nantes.project.products
+package iut.nantes.project.products.Config
 
 import iut.nantes.project.products.Entity.ProductEntity
 import org.springframework.context.annotation.Bean
