@@ -8,7 +8,7 @@ import java.util.*
 data class ProductEntity(
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    val id: UUID,
+    val id: UUID = UUID.randomUUID(),
     var name: String,
     var description: String?,
     @Embedded
