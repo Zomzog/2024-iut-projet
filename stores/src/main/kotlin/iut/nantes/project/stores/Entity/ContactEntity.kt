@@ -11,19 +11,20 @@ import jakarta.validation.constraints.Pattern
 data class ContactEntity(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long? = null,
+    val id: Int? = null,
 
     @field:Email(message = "Email invalide")
-    val email: String,
+    var email: String,
 
     @field:Pattern(regexp = "\\d{10}", message = "Numéro de téléphone invalide")
-    val phone: String,
+    var phone: String,
 
     @Embedded
-    val address: AddressEntity
+    var address: AddressEntity
 ) {
-    fun toDto() = ContactDTO(id, email, phone, address.toDto())
+    constructor() : this(null, "", "", AddressEntity("", "", ""))
 
+    fun toDto() = ContactDTO(id, email, phone, address.toDto())
 }
 
 
@@ -32,7 +33,8 @@ data class AddressEntity(
     val street: String,
     val city: String,
     val postalCode: String
-){
-    fun toDto() = AddressDTO(street, city, postalCode)
+) {
+    constructor() : this("", "", "")
 
+    fun toDto() = AddressDTO(street, city, postalCode)
 }

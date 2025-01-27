@@ -1,8 +1,8 @@
 package iut.nantes.project.stores.Service
 
-import iut.nantes.project.products.Repository.ProductRepository
 import iut.nantes.project.products.DTO.ProductDTO
 import iut.nantes.project.products.Exception.ProductException
+import iut.nantes.project.products.Repository.ProductRepositoryCustom
 import iut.nantes.project.stores.DTO.StoreDTO
 import iut.nantes.project.stores.Entity.StoreEntity
 import iut.nantes.project.stores.Exception.ContactException
@@ -17,7 +17,7 @@ import java.util.*
 class StoreService(
     private val storeRepository: StoreRepository,
     private val contactRepository: ContactRepository,
-    private val productRepository: ProductRepository
+    private val productRepository: ProductRepositoryCustom
 ) {
 
     fun createStore(storeDto: StoreDTO): StoreDTO {
