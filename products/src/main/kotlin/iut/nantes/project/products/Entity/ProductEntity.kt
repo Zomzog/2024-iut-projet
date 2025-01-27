@@ -16,9 +16,7 @@ data class ProductEntity(
     var price: PriceEntity,
     @ManyToOne
     @JoinColumn(name = "family_id")
-    var family: FamilyEntity,
-
-
+    var family: FamilyEntity
 ) {
     fun toDto() = ProductDTO(id, name, description, price.toDto(), family.toDto())
 }

@@ -9,8 +9,11 @@ import iut.nantes.project.stores.Exception.ContactException
 import iut.nantes.project.stores.Exception.StoreException
 import iut.nantes.project.stores.Repository.ContactRepository
 import iut.nantes.project.stores.Repository.StoreRepository
+import org.springframework.stereotype.Service
 import java.util.*
 
+
+@Service
 class StoreService(
     private val storeRepository: StoreRepository,
     private val contactRepository: ContactRepository,
@@ -21,8 +24,7 @@ class StoreService(
         val contactId = storeDto.contact.id ?: throw ContactException.InvalidIdFormatException()
         val contact = contactRepository.findById(contactId)
             .orElseThrow { ContactException.ContactNotFoundException() }
-
-        val lastStore = storeRepository.findTopByOrderByIdDesc(getAllStores())
+        val lastStore = storeRepository.findTopByOrderByIdDesc()
         val newId = lastStore.id?.plus(1) ?: 1L
 
         val store = StoreEntity(

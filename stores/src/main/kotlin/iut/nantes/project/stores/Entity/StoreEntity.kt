@@ -14,9 +14,9 @@ data class StoreEntity(
     @ManyToOne
     var contact: ContactEntity,
 
-    @OneToMany(mappedBy = "store", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
+    @OneToMany
     val products: MutableList<ProductEntity> = mutableListOf()
 ) {
     fun toDto() = StoreDTO(id, name, contact.toDto(), products.map { it.toDto() })
-
 }
+
