@@ -9,9 +9,11 @@ import org.springframework.web.bind.annotation.*
 import java.util.*
 
 @RestController
+@RequestMapping("/api/v1")
+
 class FamilyController(private val familyService: FamilyService) {
 
-    @PostMapping("/api/v1/families")
+    @PostMapping("/families")
     fun createFamily(@RequestBody familyDto: FamilyDTO): ResponseEntity<FamilyDTO> {
         return try {
             val createdFamily = familyService.createFamily(familyDto)
@@ -23,13 +25,13 @@ class FamilyController(private val familyService: FamilyService) {
         }
     }
 
-    @GetMapping("/api/v1/families")
+    @GetMapping("/families")
     fun getAllFamilies(): ResponseEntity<List<FamilyDTO>> {
         val families = familyService.getAllFamilies()
         return ResponseEntity.ok(families)
     }
 
-    @GetMapping("/api/v1/families/{id}")
+    @GetMapping("/families/{id}")
     fun getFamilyById(@PathVariable id: UUID): ResponseEntity<FamilyDTO> {
         return try {
             val family = familyService.getFamilyById(id)
@@ -42,7 +44,7 @@ class FamilyController(private val familyService: FamilyService) {
     }
 
 
-    @PutMapping("/api/v1/families/{id}")
+    @PutMapping("/families/{id}")
     fun updateFamily(@PathVariable id: UUID, @RequestBody familyDto: FamilyDTO): ResponseEntity<FamilyDTO> {
         return try {
             val updatedFamily = familyService.updateFamily(id, familyDto)
@@ -54,7 +56,7 @@ class FamilyController(private val familyService: FamilyService) {
         }
     }
 
-    @DeleteMapping("/api/v1/families/{id}")
+    @DeleteMapping("/families/{id}")
     fun deleteFamily(@PathVariable id: UUID): ResponseEntity<Void> {
         return try {
             familyService.deleteFamily(id)

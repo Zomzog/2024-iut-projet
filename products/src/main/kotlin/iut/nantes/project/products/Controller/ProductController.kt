@@ -10,9 +10,11 @@ import org.springframework.web.bind.annotation.*
 import java.util.*
 
 @RestController
+@RequestMapping("/api/v1")
+
 class ProductController(private val productService: ProductService) {
 
-    @PostMapping("/api/v1/products")
+    @PostMapping("/products")
     fun createProduct(@RequestBody productDto: ProductDTO): ResponseEntity<ProductDTO> {
         return try {
             val createdProduct = productService.createProduct(productDto)
@@ -24,7 +26,7 @@ class ProductController(private val productService: ProductService) {
         }
     }
 
-    @GetMapping("/api/v1/products")
+    @GetMapping("/products")
     fun getAllProducts(
         @RequestParam(required = false) familyName: String?,
         @RequestParam(required = false) minPrice: Double?,
@@ -38,7 +40,7 @@ class ProductController(private val productService: ProductService) {
         }
     }
 
-    @GetMapping("/api/v1/products/{id}")
+    @GetMapping("/products/{id}")
     fun getProductById(@PathVariable id: UUID): ResponseEntity<ProductDTO> {
         return try {
             val product = productService.getProductById(id)
@@ -50,7 +52,7 @@ class ProductController(private val productService: ProductService) {
         }
     }
 
-    @PutMapping("/api/v1/products/{id}")
+    @PutMapping("/products/{id}")
     fun updateProduct(@PathVariable id: UUID, @RequestBody productDto: ProductDTO): ResponseEntity<ProductDTO> {
         return try {
             val updatedProduct = productService.updateProduct(id, productDto)
@@ -64,7 +66,7 @@ class ProductController(private val productService: ProductService) {
         }
     }
 
-    @DeleteMapping("/api/v1/products/{id}")
+    @DeleteMapping("/v1/products/{id}")
     fun deleteProduct(@PathVariable id: UUID): ResponseEntity<Void> {
         return try {
             productService.deleteProduct(id)
