@@ -2,16 +2,24 @@
 spring:
   application:
     name: stores
-  datasource:
-    url: jdbc:h2:mem:storedb
-    driver-class-name: org.h2.Driver
-    username: sa
-    password: password
-
-  jpa:
-    packages-to-scan:
-      - iut.nantes.project.stores.entity
-      - iut.nantes.project.products.entity
+    datasource:
+      url: jdbc:h2:mem:testdb
+      driverClassName: org.h2.Driver
+      username: sa
+      password: password
+      dialect: org.hibernate.dialect.H2Dialect
+    h2:
+      console:
+        enabled: true
+    jpa:
+      hibernate:
+        ddl-auto: update
+      properties:
+        hibernate:
+          format_sql: true
+          show_sql: true
 
 server:
   port: 8082
+
+
