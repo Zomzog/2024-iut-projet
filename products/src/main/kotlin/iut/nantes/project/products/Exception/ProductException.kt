@@ -1,4 +1,4 @@
-package iut.nantes.project.products
+package iut.nantes.project.products.Exception
 
 sealed class ProductException(message: String) : RuntimeException(message) {
     class InvalidDataException(message: String = "Les données fournies sont invalides.") : ProductException(message)

@@ -1,5 +1,6 @@
 package iut.nantes.project.products.DTO
 
+import iut.nantes.project.products.Entity.PriceEntity
 import iut.nantes.project.products.Entity.ProductEntity
 import java.util.*
 
@@ -14,3 +15,10 @@ data class ProductDTO(
 
 }
 
+data class PriceDTO(
+    val amount: Double,
+    val currency: String
+) {
+    fun toEntity() = PriceEntity(amount, currency)
+
+}

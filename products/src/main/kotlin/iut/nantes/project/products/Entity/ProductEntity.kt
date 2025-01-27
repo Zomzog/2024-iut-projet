@@ -1,5 +1,6 @@
 package iut.nantes.project.products.Entity
 
+import iut.nantes.project.products.DTO.PriceDTO
 import iut.nantes.project.products.DTO.ProductDTO
 import jakarta.persistence.*
 import java.util.*
@@ -15,8 +16,17 @@ data class ProductEntity(
     var price: PriceEntity,
     @ManyToOne
     @JoinColumn(name = "family_id")
-    var family: FamilyEntity
+    var family: FamilyEntity,
+
+
 ) {
     fun toDto() = ProductDTO(id, name, description, price.toDto(), family.toDto())
 }
 
+@Embeddable
+data class PriceEntity(
+    var amount: Double,
+    var currency: String
+) {
+    fun toDto() = PriceDTO(amount, currency)
+}

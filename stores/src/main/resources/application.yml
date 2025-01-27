@@ -1,5 +1,17 @@
 
 spring:
-  application.name: stores
+  application:
+    name: stores
+  datasource:
+    url: jdbc:h2:mem:storedb
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: password
+
+  jpa:
+    packages-to-scan:
+      - iut.nantes.project.stores.entity
+      - iut.nantes.project.products.entity
+
 server:
   port: 8082

@@ -2,6 +2,8 @@ package iut.nantes.project.products
 
 import iut.nantes.project.products.DTO.ProductDTO
 import iut.nantes.project.products.Entity.ProductEntity
+import iut.nantes.project.products.Exception.FamilyException
+import iut.nantes.project.products.Exception.ProductException
 import iut.nantes.project.products.Repository.FamilyRepository
 import iut.nantes.project.products.Repository.ProductRepository
 import java.util.*

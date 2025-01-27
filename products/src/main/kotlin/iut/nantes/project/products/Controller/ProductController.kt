@@ -1,8 +1,8 @@
 package iut.nantes.project.products.Controller
 
 import iut.nantes.project.products.DTO.ProductDTO
-import iut.nantes.project.products.FamilyException
-import iut.nantes.project.products.ProductException
+import iut.nantes.project.products.Exception.FamilyException
+import iut.nantes.project.products.Exception.ProductException
 import iut.nantes.project.products.ProductService
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity

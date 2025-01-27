@@ -26,6 +26,11 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 	implementation("com.h2database:h2")
 
+	implementation("org.springframework.boot:spring-boot-starter-validation")
+
+
+
+
 
 
 	annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
