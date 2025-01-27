@@ -1,14 +1,11 @@
 package iut.nantes.project.products.Config
 
-import iut.nantes.project.products.Entity.FamilyEntity
 import iut.nantes.project.products.ProductService
 import iut.nantes.project.products.Repository.*
 import iut.nantes.project.products.Service.FamilyService
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Profile
-import org.springframework.data.jpa.repository.JpaRepository
-import java.util.*
 
 @Configuration
 class AppConfig {
@@ -30,8 +27,22 @@ class AppConfig {
         return FamilyService(familyRepository)
     }
 
+
+
     @Bean
-    fun productService(productRepository: ProductRepository, familyRepository: FamilyRepositoryCustom): ProductService {
+    @Profile("!dev")
+    fun productRepositoryJPA(jpaRepository: ProductJpaRepository): ProductRepositoryCustom {
+        return ProductRepositoryJPA(jpaRepository)
+    }
+
+    @Bean
+    @Profile("dev")
+    fun productRepositoryInMemory(): ProductRepositoryCustom {
+        return ProductRepositoryInMemory()
+    }
+
+    @Bean
+    fun productService(productRepository: ProductRepositoryCustom, familyRepository: FamilyRepositoryCustom): ProductService {
         return ProductService(productRepository, familyRepository)
     }
 }

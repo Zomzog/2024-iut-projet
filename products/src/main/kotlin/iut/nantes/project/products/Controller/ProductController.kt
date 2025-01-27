@@ -66,7 +66,7 @@ class ProductController(private val productService: ProductService) {
         }
     }
 
-    @DeleteMapping("/v1/products/{id}")
+    @DeleteMapping("/products/{id}")
     fun deleteProduct(@PathVariable id: UUID): ResponseEntity<Void> {
         return try {
             productService.deleteProduct(id)
