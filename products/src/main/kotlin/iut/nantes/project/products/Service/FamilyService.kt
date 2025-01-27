@@ -4,11 +4,10 @@ package iut.nantes.project.products.Service
 import iut.nantes.project.products.DTO.FamilyDTO
 import iut.nantes.project.products.Entity.FamilyEntity
 import iut.nantes.project.products.Exception.FamilyException
-import iut.nantes.project.products.Repository.FamilyRepository
+import iut.nantes.project.products.Repository.FamilyRepositoryCustom
 import java.util.*
 
-
-class FamilyService(private val familyRepository: FamilyRepository) {
+class FamilyService(private val familyRepository: FamilyRepositoryCustom) {
 
     fun createFamily(familyDto: FamilyDTO): FamilyDTO {
         if (familyRepository.existsByName(familyDto.name)) {

@@ -4,11 +4,11 @@ import iut.nantes.project.products.DTO.ProductDTO
 import iut.nantes.project.products.Entity.ProductEntity
 import iut.nantes.project.products.Exception.FamilyException
 import iut.nantes.project.products.Exception.ProductException
-import iut.nantes.project.products.Repository.FamilyRepository
+import iut.nantes.project.products.Repository.FamilyRepositoryCustom
 import iut.nantes.project.products.Repository.ProductRepository
 import java.util.*
 
-class ProductService(private val productRepository: ProductRepository, private val familyRepository: FamilyRepository) {
+class ProductService(private val productRepository: ProductRepository, private val familyRepository: FamilyRepositoryCustom) {
 
     fun createProduct(productDto: ProductDTO): ProductDTO {
         val familyId = productDto.family.id ?: throw FamilyException.InvalidIdFormatException()

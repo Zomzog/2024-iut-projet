@@ -3,6 +3,7 @@ package iut.nantes.project.products.Controller
 import iut.nantes.project.products.DTO.FamilyDTO
 import iut.nantes.project.products.Exception.FamilyException
 import iut.nantes.project.products.Service.FamilyService
+import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -14,7 +15,7 @@ import java.util.*
 class FamilyController(private val familyService: FamilyService) {
 
     @PostMapping("/families")
-    fun createFamily(@RequestBody familyDto: FamilyDTO): ResponseEntity<FamilyDTO> {
+    fun createFamily(@RequestBody @Valid familyDto: FamilyDTO): ResponseEntity<FamilyDTO> {
         return try {
             val createdFamily = familyService.createFamily(familyDto)
             ResponseEntity.status(HttpStatus.CREATED).body(createdFamily)
