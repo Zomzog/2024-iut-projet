@@ -9,7 +9,8 @@ import java.util.*
 class ProductService(private val productRepository: ProductRepository, private val familyRepository: FamilyRepository) {
 
     fun createProduct(productDto: ProductDTO): ProductDTO {
-        val family = familyRepository.findById(productDto.family.id.toString())
+        val familyId = productDto.family.id ?: throw FamilyException.InvalidIdFormatException()
+        val family = familyRepository.findById(familyId)
             .orElseThrow { FamilyException.FamilyNotFoundException() }
 
         val product = ProductEntity(UUID.randomUUID(), productDto.name, productDto.description, productDto.price.toEntity(), family)
@@ -40,7 +41,8 @@ class ProductService(private val productRepository: ProductRepository, private v
         val product = productRepository.findById(id.toString())
             .orElseThrow { ProductException.ProductNotFoundException() }
 
-        val family = familyRepository.findById(productDto.family.id.toString())
+        val familyId = productDto.family.id ?: throw FamilyException.InvalidIdFormatException()
+        val family = familyRepository.findById(familyId)
             .orElseThrow { FamilyException.FamilyNotFoundException() }
 
         product.name = productDto.name

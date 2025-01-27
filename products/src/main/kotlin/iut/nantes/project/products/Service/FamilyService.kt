@@ -23,12 +23,15 @@ class FamilyService(private val familyRepository: FamilyRepository) {
         return familyRepository.findAll().map { it.toDto() }
     }
 
-    fun getFamilyById(id: String): FamilyDTO {
-        val family = familyRepository.findById(id).orElseThrow { FamilyException.FamilyNotFoundException() }
+    fun getFamilyById(id: UUID): FamilyDTO {
+        val family = familyRepository.findById(id)
+            .orElseThrow { FamilyException.FamilyNotFoundException() }
+
         return family.toDto()
     }
 
-    fun updateFamily(id: String, familyDto: FamilyDTO): FamilyDTO {
+
+    fun updateFamily(id: UUID, familyDto: FamilyDTO): FamilyDTO {
         val family = familyRepository.findById(id).orElseThrow { FamilyException.FamilyNotFoundException() }
         if (familyRepository.existsByName(familyDto.name) && family.name != familyDto.name) {
             throw FamilyException.NameConflictException()
@@ -39,7 +42,7 @@ class FamilyService(private val familyRepository: FamilyRepository) {
         return family.toDto()
     }
 
-    fun deleteFamily(id: String) {
+    fun deleteFamily(id: UUID) {
         val family = familyRepository.findById(id).orElseThrow { FamilyException.FamilyNotFoundException() }
         familyRepository.delete(family)
     }
