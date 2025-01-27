@@ -6,6 +6,7 @@ import iut.nantes.project.products.Service.FamilyService
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+import java.util.*
 
 @RestController
 class FamilyController(private val familyService: FamilyService) {
@@ -29,19 +30,20 @@ class FamilyController(private val familyService: FamilyService) {
     }
 
     @GetMapping("/api/v1/families/{id}")
-    fun getFamilyById(@PathVariable id: String): ResponseEntity<FamilyDTO> {
+    fun getFamilyById(@PathVariable id: UUID): ResponseEntity<FamilyDTO> {
         return try {
             val family = familyService.getFamilyById(id)
             ResponseEntity.ok(family)
-        } catch (e: FamilyException.InvalidIdFormatException) {
+        } catch (e: IllegalArgumentException) {
             ResponseEntity.status(HttpStatus.BAD_REQUEST).build()
         } catch (e: FamilyException.FamilyNotFoundException) {
             ResponseEntity.status(HttpStatus.NOT_FOUND).build()
         }
     }
 
+
     @PutMapping("/api/v1/families/{id}")
-    fun updateFamily(@PathVariable id: String, @RequestBody familyDto: FamilyDTO): ResponseEntity<FamilyDTO> {
+    fun updateFamily(@PathVariable id: UUID, @RequestBody familyDto: FamilyDTO): ResponseEntity<FamilyDTO> {
         return try {
             val updatedFamily = familyService.updateFamily(id, familyDto)
             ResponseEntity.ok(updatedFamily)
@@ -53,7 +55,7 @@ class FamilyController(private val familyService: FamilyService) {
     }
 
     @DeleteMapping("/api/v1/families/{id}")
-    fun deleteFamily(@PathVariable id: String): ResponseEntity<Void> {
+    fun deleteFamily(@PathVariable id: UUID): ResponseEntity<Void> {
         return try {
             familyService.deleteFamily(id)
             ResponseEntity.status(HttpStatus.NO_CONTENT).build()

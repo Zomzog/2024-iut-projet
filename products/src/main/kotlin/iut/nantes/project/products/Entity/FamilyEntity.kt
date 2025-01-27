@@ -9,10 +9,8 @@ data class FamilyEntity(
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     val id: UUID = UUID.randomUUID(),
-    var name: String,
-    var description: String,
-
+    var name: String = "",
+    var description: String = ""
 ) {
-
     fun toDto() = FamilyDTO(id, name, description)
 }
