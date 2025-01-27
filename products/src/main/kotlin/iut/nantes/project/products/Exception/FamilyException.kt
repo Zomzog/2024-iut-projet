@@ -1,4 +1,4 @@
-package iut.nantes.project.products
+package iut.nantes.project.products.Exception
 
 
 sealed class FamilyException(message: String) : RuntimeException(message) {

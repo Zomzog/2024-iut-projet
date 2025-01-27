@@ -1,5 +1,5 @@
 server:
-  port: 8080
+  port: 8081
 
 logging:
   level:
@@ -25,4 +25,10 @@ spring:
     driver-class-name: org.h2.Driver
     username: sa
     password: password
+
+
+  jpa:
+    packages-to-scan:
+      - iut.nantes.project.products.entity
+      - iut.nantes.project.stores.entity
 
