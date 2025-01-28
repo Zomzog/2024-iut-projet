@@ -2,7 +2,6 @@ package iut.nantes.project.stores.Service
 
 
 import iut.nantes.project.products.Exception.ProductException
-import iut.nantes.project.products.Repository.ProductRepositoryCustom
 import iut.nantes.project.stores.DTO.ProductStoreDTO
 import iut.nantes.project.stores.DTO.StoreDTO
 import iut.nantes.project.stores.Entity.ProductStoreEntity
@@ -19,7 +18,7 @@ import java.util.UUID
 class StoreService(
     private val storeRepository: StoreRepository,
     private val contactRepository: ContactRepository,
-    private val productRepository : ProductRepositoryCustom
+    private val webClientServiceProduct : WebClientService
 ) {
 
     fun createStore(storeDTO: StoreDTO): StoreDTO {
@@ -32,21 +31,7 @@ class StoreService(
             products = mutableListOf()
         )
 
-        storeDTO.products.forEach { productDTO ->
-            val product = productRepository.findById(productDTO.id.toString())
-                .orElseThrow { IllegalArgumentException("Le produit avec l'ID ${productDTO.id} n'existe pas.") }
-            if (product != null){
-                val productStoreEntity = ProductStoreEntity(
-                    id = productDTO.id,
-                    name = productDTO.name,
-                    quantity = productDTO.quantity,
-                    store = store
-                )
 
-                store.products.add(productStoreEntity)
-            }
-
-        }
         val savedStore = storeRepository.save(store)
         return StoreDTO(savedStore.id, savedStore.name, contact.toDto(), emptyList())
     }
@@ -115,8 +100,8 @@ class StoreService(
         val store = storeRepository.findById(storeId)
             .orElseThrow { StoreException.StoreNotFoundException() }
 
-        val product = productRepository.findById(productId.toString())
-            .orElseThrow { ProductException.ProductNotFoundException() }
+        val product = webClientServiceProduct.getProductInfo(productId.toString())
+
 
         val qtyToAdd = quantity ?: 1
         if (qtyToAdd <= 0) throw IllegalArgumentException("La quantité doit être positive.")
@@ -127,7 +112,7 @@ class StoreService(
             productInStore.quantity += qtyToAdd
         } else {
             val newProductStoreEntity = ProductStoreEntity(
-                id = product.id,
+                id = product.id!!,
                 name = product.name,
                 quantity = qtyToAdd,
                 store = store

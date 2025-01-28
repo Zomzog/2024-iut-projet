@@ -13,7 +13,6 @@ import org.springframework.security.core.userdetails.UserDetailsService
 @Configuration
 class SecurityConfig(
     @Autowired private val userRepository: UserRepository,
-    @Autowired private val passwordEncoder: PasswordEncoder,
     @Autowired private val env: org.springframework.core.env.Environment
 ) {
 
