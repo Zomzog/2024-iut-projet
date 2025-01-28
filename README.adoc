@@ -1,3 +1,13 @@
+== Rendu
+
+Le projet doit être rendu sous la forme d'un repository (gitlab ou github)
+
+Le projet est à faire maximum en trinôme.
+
+Vous pouvez ajouter un README si vous avez un choix à justifier ou un blocage.
+
+Il doit être rendu au plus tard le 8 février à 23h59
+
 == Sujet
 
 Le but de ce projet est de créer 3 services pour faire de la gestion de stock magasin.
@@ -14,7 +24,7 @@ par exemple s'il est demandé une base de donnée h2, il vaut mieux une version 
 
 La liste des APIs doit inclure au minimum les endpoints demandés, mais il est possible d'en ajouter d'autres si nécessaire.
 
-== Products ✅
+== Products
 
 Le service Products est un service qui permet de gérer des familles de produits et les produits associés.
 
@@ -22,14 +32,16 @@ Contraintes :
 
 * Ce service doit fournir une implémentation de la "base de donnée" :
 ** en h2 par default,
-** avec une hashmap si le profile DEV est activé.
+** avec une hashmap si le profile DEV est activé. 
+*** /!\ Par souci de simplification, ce n'est pas grave si une connexion h2 et son repo jpa sont créées, il faut juste que le code utilise la hashmap
 * Ce service ne doit pas utiliser les annotations `@Compoment`, `@Service`, `@Repository`, `@Controller`.
+** @RestController peut-être utilisé, mais uniquement dans le cadre d'un controlleur HTTP
 * Ce service doit avec une architecture en couche :
 ** La couche `controlleur` qui fait la validation des données et la transformation DTO -> Format interne.
 ** La couche `service` qui fait la logique métier.
 ** La couche `repository` qui fait la gestion de la base de donnée (ça peut être le repository JPA).
 
-=== Famille 🟠
+=== Famille
 
 Une famille se présente sous la forme suivante :
 
