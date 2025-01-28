@@ -2,15 +2,16 @@ package iut.nantes.project.stores.Entity
 
 import iut.nantes.project.stores.DTO.ProductStoreDTO
 import jakarta.persistence.*
+import java.util.*
 
 @Entity
 data class ProductStoreEntity(
     @Id
-    val id: String,
+    val id: UUID,
 
     val name: String,
 
-    val quantity: Int,
+    var quantity: Int,
 
     @ManyToOne
     @JoinColumn(name = "store_id")

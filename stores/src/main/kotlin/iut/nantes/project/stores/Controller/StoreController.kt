@@ -1,8 +1,10 @@
 package iut.nantes.project.stores.Controller
 
+import iut.nantes.project.stores.DTO.ProductStoreDTO
 import iut.nantes.project.stores.DTO.StoreDTO
 import iut.nantes.project.stores.Service.StoreService
 import org.springframework.web.bind.annotation.*
+import java.util.UUID
 
 @RestController
 @RequestMapping("/api/v1/stores")
@@ -31,5 +33,31 @@ class StoreController(private val storeService: StoreService) {
     @DeleteMapping("/{id}")
     fun deleteStore(@PathVariable id: Int) {
         storeService.deleteStore(id)
+    }
+
+    @PostMapping("/{storeId}/products/{productId}/add")
+    fun addProductToStore(
+        @PathVariable storeId: Int,
+        @PathVariable productId: UUID,
+        @RequestParam(required = false) quantity: Int?
+    ): ProductStoreDTO {
+        return storeService.addProductToStore(storeId, productId, quantity)
+    }
+
+    @PostMapping("/{storeId}/products/{productId}/remove")
+    fun removeProductFromStore(
+        @PathVariable storeId: Int,
+        @PathVariable productId: UUID,
+        @RequestParam(required = false) quantity: Int?
+    ): ProductStoreDTO {
+        return storeService.removeProductFromStore(storeId, productId, quantity)
+    }
+
+    @DeleteMapping("/{storeId}/products")
+    fun deleteProductsFromStore(
+        @PathVariable storeId: Int,
+        @RequestBody productIds: List<String>
+    ) {
+        storeService.deleteProductsFromStore(storeId, productIds)
     }
 }
