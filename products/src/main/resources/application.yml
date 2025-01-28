@@ -2,12 +2,6 @@ server:
   port: 8081
 
 
-logging:
-  level:
-    org.springframework.web: DEBUG
-    org.hibernate.validator: DEBUG
-    org.springframework: DEBUG
-
 spring:
   application:
     name: products
