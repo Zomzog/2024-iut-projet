@@ -3,7 +3,7 @@
 - Thomas OULMAS
 - Nils Moreau--Thomas
 
-© 2025 : Tous les développements sont le fruit des membres de ce groupe.
+© 2025 : Tous les développements du projet appartiennent des membres de ce groupe.
 
 == Rendu
 
