@@ -1,22 +1,23 @@
 package iut.nantes.project.gateway.Controller
 
 
+import iut.nantes.project.gateway.Entity.UserDTO
+import iut.nantes.project.gateway.Service.UserService
 import iut.nantes.project.products.DTO.ProductDTO
-import org.springframework.boot.autoconfigure.security.SecurityProperties
-import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.reactive.function.client.WebClient
 
 @RestController
 @RequestMapping("/api/v1")
-class GatewayController {
+class GatewayController(private val userService: UserService) {
 
     private val webClient: WebClient = WebClient.create()
 
-    @PostMapping("/user")
-    fun createUser(@RequestBody user: SecurityProperties.User): ResponseEntity<SecurityProperties.User> {
-        return ResponseEntity.status(HttpStatus.CREATED).body(user)
+    @PostMapping
+    fun createUser(@RequestBody userDTO: UserDTO): ResponseEntity<String> {
+        userService.createUser(userDTO)
+        return ResponseEntity.ok("User created successfully")
     }
 
     @GetMapping("/products")
