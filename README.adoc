@@ -1,3 +1,10 @@
+== Membres du PROJET (BUT3 Groupe 2) : 
+- Nathan HEQUET 
+- Thomas OULMAS
+- Nils Moreau--Thomas
+
+@Copyright 2025
+
 == Rendu
 
 Le projet doit être rendu sous la forme d'un repository (gitlab ou github)
