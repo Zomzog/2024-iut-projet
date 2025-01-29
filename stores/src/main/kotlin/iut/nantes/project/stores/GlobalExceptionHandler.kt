@@ -20,6 +20,7 @@ class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception::class)
     fun handleException(ex: Exception): ResponseEntity<String> {
-        return ResponseEntity("Internal server error: ${ex.message}", HttpStatus.INTERNAL_SERVER_ERROR)
+        return if (ex.message?.contains("Failed to convert") == true) ResponseEntity("Illegal Argument: ${ex.message}", HttpStatus.BAD_REQUEST)
+        else ResponseEntity("Internal server error: ${ex.message}", HttpStatus.INTERNAL_SERVER_ERROR)
     }
 }
