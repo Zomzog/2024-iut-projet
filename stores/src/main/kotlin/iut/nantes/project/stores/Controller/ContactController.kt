@@ -4,6 +4,7 @@ import iut.nantes.project.stores.DTO.ContactDTO
 import iut.nantes.project.stores.Entity.ContactEntity
 import iut.nantes.project.stores.Exception.ContactException
 import iut.nantes.project.stores.Service.ContactService
+import jakarta.validation.Valid
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
@@ -13,7 +14,8 @@ import org.springframework.web.bind.annotation.*
 class ContactController(private val contactService: ContactService) {
 
     @PostMapping
-    fun createContact(@RequestBody contact: ContactDTO): ContactDTO {
+    @ResponseStatus(HttpStatus.CREATED)
+    fun createContact(@RequestBody @Valid contact: ContactDTO): ContactDTO {
         return contactService.createContact(contact)
     }
 
@@ -29,11 +31,12 @@ class ContactController(private val contactService: ContactService) {
     }
 
     @PutMapping("/{id}")
-    fun updateContact(@PathVariable id: Int, @RequestBody contactEntity: ContactDTO): ContactDTO? {
+    fun updateContact(@PathVariable id: Int, @RequestBody @Valid contactEntity: ContactDTO): ContactDTO? {
         return contactService.updateContact(id, contactEntity)
     }
 
     @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     fun deleteContact(@PathVariable id: Int) {
         return contactService.deleteContact(id)
 

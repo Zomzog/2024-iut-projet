@@ -3,6 +3,7 @@ package iut.nantes.project.stores.DTO
 
 import iut.nantes.project.stores.Entity.AddressEntity
 import iut.nantes.project.stores.Entity.ContactEntity
+import jakarta.validation.Valid
 import jakarta.validation.constraints.Email
 import jakarta.validation.constraints.Pattern
 import jakarta.validation.constraints.Size
@@ -16,7 +17,7 @@ data class ContactDTO(
     @field:Pattern(regexp = "^[0-9]{10}$", message = "Le téléphone doit être un numéro valide à 10 chiffres.")
     var phone: String,
 
-    @field:Size(min = 5, max = 50, message = "La rue doit faire entre 5 et 50 caractères.")
+    @field:Valid
     var address: AddressDTO
 ) {
     fun toEntity() = ContactEntity(id, email, phone, address.toEntity())
