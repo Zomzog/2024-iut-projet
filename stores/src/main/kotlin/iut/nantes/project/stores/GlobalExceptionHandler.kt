@@ -2,8 +2,10 @@ package iut.nantes.project.stores
 import iut.nantes.project.stores.Exception.ContactException
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.RestControllerAdvice
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException
 
 @RestControllerAdvice
 class GlobalExceptionHandler {
@@ -13,14 +15,22 @@ class GlobalExceptionHandler {
         return ResponseEntity(ex.message, HttpStatus.NOT_FOUND)
     }
 
-    @ExceptionHandler(IllegalArgumentException::class)
-    fun handleIllegalArgumentException(ex: IllegalArgumentException): ResponseEntity<String> {
+    @ExceptionHandler(ContactException.ContactIsInAStoreException::class)
+    fun handleContactIsInAStoreException(ex: ContactException.ContactIsInAStoreException): ResponseEntity<String> {
+        return ResponseEntity(ex.message, HttpStatus.CONFLICT)
+    }
+
+    @ExceptionHandler(MethodArgumentTypeMismatchException::class,
+        MethodArgumentNotValidException::class,
+        ContactException.InvalidIdFormatException::class,
+        IllegalArgumentException::class,
+        ContactException.InvalidDataException::class)
+    fun handleIncorrectArgument(ex: Exception): ResponseEntity<String> {
         return ResponseEntity(ex.message, HttpStatus.BAD_REQUEST)
     }
 
     @ExceptionHandler(Exception::class)
     fun handleException(ex: Exception): ResponseEntity<String> {
-        return if (ex.message?.contains("Failed to convert") == true) ResponseEntity("Illegal Argument: ${ex.message}", HttpStatus.BAD_REQUEST)
-        else ResponseEntity("Internal server error: ${ex.message}", HttpStatus.INTERNAL_SERVER_ERROR)
+        return ResponseEntity("Internal server error: ${ex.message}", HttpStatus.INTERNAL_SERVER_ERROR)
     }
 }

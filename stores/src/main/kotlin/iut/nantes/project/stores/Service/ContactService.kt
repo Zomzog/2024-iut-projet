@@ -7,7 +7,7 @@ import iut.nantes.project.stores.Repository.ContactRepository
 import org.springframework.stereotype.Service
 
 @Service
-class ContactService(private val contactRepository: ContactRepository) {
+class ContactService(private val contactRepository: ContactRepository, private val clientService: WebClientService) {
 
     fun createContact(contact: ContactDTO): ContactDTO {
         val contactEntity = ContactEntity(
@@ -33,7 +33,8 @@ class ContactService(private val contactRepository: ContactRepository) {
     fun updateContact(id: Int, contactDTO: ContactDTO): ContactDTO {
         val existingContact = contactRepository.findById(id)
             .orElseThrow { ContactException.ContactNotFoundException("Contact not found with id: $id") }
-
+        if (existingContact.email != contactDTO.email
+            && existingContact.phone != contactDTO.phone) throw ContactException.InvalidDataException()
         existingContact.email = contactDTO.email
         existingContact.phone = contactDTO.phone
         existingContact.address = contactDTO.address.toEntity()
@@ -45,7 +46,8 @@ class ContactService(private val contactRepository: ContactRepository) {
     fun deleteContact(id: Int) {
         val contact = contactRepository.findById(id)
             .orElseThrow { ContactException.ContactNotFoundException("Contact not found with id: $id") }
-
+        val isInMagasin = clientService.getAllStoreInfo().any { it.contact.id == contact.id }
+        if (isInMagasin) throw ContactException.ContactIsInAStoreException()
         contactRepository.delete(contact)
     }
 }

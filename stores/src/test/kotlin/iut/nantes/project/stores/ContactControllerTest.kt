@@ -18,8 +18,7 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import java.util.*
@@ -34,7 +33,6 @@ class ContactControllerTest {
 
     val contactDto = ContactDTO(1, "test.contact@gmail.com", "0123456789", AddressDTO("7 rue du test", "Nantes", "44200"))
 
-    //Pb retourne mauvais code de validation
     @Test
     fun createValidContact() {
         whenever(contactService.createContact(any())).thenReturn(contactDto)
@@ -42,7 +40,7 @@ class ContactControllerTest {
         mockMvc.perform(
             post("/api/v1/contacts")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("""{"id": 1, "email": "test.contact@gmail.com", "phone": "0123456789", "address": {"street" : "7 rue du test", "city":"Nantes", "postalCode": "44200"}}"""))
+                .content("""{"email": "test.contact@gmail.com", "phone": "0123456789", "address": {"street" : "7 rue du test", "city":"Nantes", "postalCode": "44200"}}"""))
             .andExpect(status().isCreated)
     }
 
@@ -52,7 +50,7 @@ class ContactControllerTest {
         mockMvc.perform(
             post("/api/v1/contacts")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("""{"id": 1, "email": "test.contact@gmail.com", "phone": "0", "address": {"street" : "7", "city":"T", "postalCode": "4"}}"""))
+                .content("""{"email": "test.contact@gmail.com", "phone": "0123456789", "address": {"street" : "7", "city":"T", "postalCode": "4"}}"""))
             .andExpect(status().`is`(400))
     }
 
@@ -77,7 +75,7 @@ class ContactControllerTest {
 
     @Test
     fun getContactByInvalidId() {
-        whenever(contactService.getContactById(any())).thenThrow(ContactException.ContactNotFoundException("Contact not found with id: 2"))
+        whenever(contactService.getContactById(any())).thenThrow(ContactException.ContactNotFoundException())
 
         mockMvc.perform(
             get("/api/v1/contacts/2"))
@@ -86,25 +84,59 @@ class ContactControllerTest {
 
     @Test
     fun getContactByIdIllegalArgument() {
-        whenever(contactService.getContactById(any())).thenThrow(ContactException.ContactNotFoundException("Contact not found with id: 2"))
+        whenever(contactService.getContactById(any())).thenThrow(ContactException.InvalidIdFormatException())
 
         mockMvc.perform(
             get("/api/v1/contacts/a"))
             .andExpect(status().`is`(400))
     }
 
-    // A finir
-    /*@Test
+    @Test
     fun updateContact() {
         whenever(contactService.updateContact(eq(1), any())).thenReturn(contactDto)
 
         mockMvc.perform(
-            post("/api/v1/contacts/1")
+            put("/api/v1/contacts/1")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("""{"id": 1, "email": "test.contact@gmail.com", "phone": "0123456789", "address": {"street" : "7 rue du test", "city":"Nantes", "postalCode": "44200"}}"""))
+                .content("""{"email": "test.contact@gmail.com", "phone": "0123456789", "address": {"street" : "7 rue du test", "city":"Nantes", "postalCode": "44200"}}"""))
             .andExpect(status().isOk)
-    }*/
+    }
 
     @Test
-    fun deleteContact() {}
+    fun updateInvalidContact() {
+        whenever(contactService.updateContact(eq(1), any())).thenThrow(ContactException.InvalidDataException())
+
+        mockMvc.perform(
+            put("/api/v1/contacts/1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("""{"email": "updatedtest.contact@gmail.com", "phone": "9876543210", "address": {"street" : "7 rue du test", "city":"Nantes", "postalCode": "44200"}}"""))
+            .andExpect(status().`is`(400))
+    }
+
+    @Test
+    fun deleteContact() {
+        doNothing().whenever(contactService).deleteContact(any())
+
+        mockMvc.perform(
+            delete("/api/v1/contacts/1"))
+                .andExpect(status().`is`(204))
+    }
+
+    @Test
+    fun deleteInvalidIDContact() {
+        whenever(contactService.deleteContact(any())).thenThrow(ContactException.InvalidIdFormatException())
+
+        mockMvc.perform(
+            delete("/api/v1/contacts/2"))
+            .andExpect(status().`is`(400))
+    }
+
+    @Test
+    fun deleteContactIsInAStore() {
+        whenever(contactService.deleteContact(any())).thenThrow(ContactException.ContactIsInAStoreException())
+
+        mockMvc.perform(
+            delete("/api/v1/contacts/1"))
+            .andExpect(status().`is`(409))
+    }
 }
