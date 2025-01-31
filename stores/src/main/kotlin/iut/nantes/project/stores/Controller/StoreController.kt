@@ -3,6 +3,8 @@ package iut.nantes.project.stores.Controller
 import iut.nantes.project.stores.DTO.ProductStoreDTO
 import iut.nantes.project.stores.DTO.StoreDTO
 import iut.nantes.project.stores.Service.StoreService
+import jakarta.validation.Valid
+import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
 import java.util.UUID
 
@@ -11,7 +13,8 @@ import java.util.UUID
 class StoreController(private val storeService: StoreService) {
 
     @PostMapping
-    fun createStore(@RequestBody storeDTO: StoreDTO): StoreDTO {
+    @ResponseStatus(HttpStatus.CREATED)
+    fun createStore(@RequestBody @Valid storeDTO: StoreDTO): StoreDTO {
         return storeService.createStore(storeDTO)
     }
 
@@ -26,7 +29,7 @@ class StoreController(private val storeService: StoreService) {
     }
 
     @PutMapping("/{id}")
-    fun updateStore(@PathVariable id: Int, @RequestBody storeDTO: StoreDTO): StoreDTO {
+    fun updateStore(@PathVariable id: Int, @RequestBody @Valid storeDTO: StoreDTO): StoreDTO {
         return storeService.updateStore(id, storeDTO)
     }
 

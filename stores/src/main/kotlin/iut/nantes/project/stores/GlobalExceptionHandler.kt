@@ -1,5 +1,6 @@
 package iut.nantes.project.stores
 import iut.nantes.project.stores.Exception.ContactException
+import iut.nantes.project.stores.Exception.StoreException
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.MethodArgumentNotValidException
@@ -10,8 +11,9 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 @RestControllerAdvice
 class GlobalExceptionHandler {
 
-    @ExceptionHandler(ContactException.ContactNotFoundException::class)
-    fun handleContactNotFoundException(ex: ContactException.ContactNotFoundException): ResponseEntity<String> {
+    @ExceptionHandler(ContactException.ContactNotFoundException::class,
+        StoreException.StoreNotFoundException::class)
+    fun handleContactNotFoundException(ex: Exception): ResponseEntity<String> {
         return ResponseEntity(ex.message, HttpStatus.NOT_FOUND)
     }
 
@@ -23,8 +25,10 @@ class GlobalExceptionHandler {
     @ExceptionHandler(MethodArgumentTypeMismatchException::class,
         MethodArgumentNotValidException::class,
         ContactException.InvalidIdFormatException::class,
+        StoreException.InvalidIdFormatException::class,
         IllegalArgumentException::class,
-        ContactException.InvalidDataException::class)
+        ContactException.InvalidDataException::class,
+        StoreException.InvalidIdFormatException::class)
     fun handleIncorrectArgument(ex: Exception): ResponseEntity<String> {
         return ResponseEntity(ex.message, HttpStatus.BAD_REQUEST)
     }
