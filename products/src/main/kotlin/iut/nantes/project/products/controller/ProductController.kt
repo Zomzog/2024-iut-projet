@@ -12,14 +12,11 @@ class ProductController(val db: DatabaseProxy){
 
     @PostMapping("/api/v1/product")
     fun createProduct(@RequestBody product: ProductDto): ResponseEntity<Any> {
-        if (db.findFamilleByName(product.family.name)==null){
-            return ResponseEntity.badRequest().body("La famille du produit n'existe pas")
+        val result = db.saveProduct(product)
+        return if (result != null) {
+            ResponseEntity.status(HttpStatus.CREATED).body(result)
+        } else {
+            ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid product data")
         }
-        val violationsProduct = db.validateProduct(product)
-        val violationsFamille = db.validateFamille(product.family)
-        if (violationsFamille.isNotEmpty() || violationsProduct.isNotEmpty()) {
-            return ResponseEntity.badRequest().body("Erreurs dans les données fournies")
-        }
-        db.saveProduct(product).let { return ResponseEntity.status(HttpStatus.CREATED).body(it) }
     }
 }

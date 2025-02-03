@@ -3,21 +3,61 @@ package iut.nantes.project.products
 import jakarta.persistence.*
 import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.Size
+import org.hibernate.annotations.GenericGenerator
+import org.springframework.context.annotation.Profile
 import org.springframework.data.jpa.repository.JpaRepository
 import java.util.UUID
 
-interface FamilleJpa: JpaRepository<FamilleEntity, Int> {
+
+@Profile("!dev")
+interface FamilleJpa: JpaRepository<FamilleEntity, Int>, FamilleRepository {
+}
+
+@Profile("dev")
+class InMemoryFamilleRepository : FamilleRepository {
+    private val familles = mutableMapOf<UUID, FamilleEntity>()
+
+    override fun save(famille: FamilleEntity): FamilleEntity {
+        familles[famille.id] = famille
+        return famille
+    }
+
+    override fun findById(id: UUID): FamilleEntity? {
+        return familles[id]
+    }
+
+    override fun findAll(): List<FamilleEntity> {
+        return familles.values.toList()
+    }
+
+    override fun findByName(name: String): FamilleEntity? {
+        return familles.values.find { it.name == name }
+    }
+
+    override fun deleteById(id: UUID) {
+        familles.remove(id)
+    }
+
+    override fun existsById(id: UUID): Boolean {
+        return familles.containsKey(id)
+    }
+}
+
+interface FamilleRepository {
+    fun save(famille: FamilleEntity): FamilleEntity
+    fun findById(id: UUID): FamilleEntity?
+    fun findAll(): List<FamilleEntity>
     fun findByName(name: String): FamilleEntity?
-    fun findById(id: String): FamilleEntity?
-    fun existsById(id: String): Boolean
-    fun deleteById(id: String)
+    fun deleteById(id: UUID)
+    fun existsById(id: UUID): Boolean
 }
 
 @Entity
 @Table(name = "FAMILLES", uniqueConstraints = [UniqueConstraint(columnNames = ["name"])])
 data class FamilleEntity(
     @Id
-    val id: String = UUID.randomUUID().toString(),
+    @GeneratedValue
+    val id: UUID = UUID.randomUUID(),
 
     @Column(nullable = false, unique = true)
     @field:NotBlank(message = "Le nom ne peut pas être vide.")

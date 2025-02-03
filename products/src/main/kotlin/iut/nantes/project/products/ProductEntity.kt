@@ -5,17 +5,56 @@ import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.Size
 import jakarta.validation.constraints.Positive
 import jakarta.validation.constraints.Pattern
+import org.springframework.context.annotation.Profile
 import org.springframework.data.jpa.repository.JpaRepository
 import java.util.*
 
-interface ProductJpa: JpaRepository<ProductsEntity, Int> {
+interface ProductRepository {
+    fun save(product: ProductsEntity): ProductsEntity
+    fun findById(id: UUID): ProductsEntity?
+    fun findAll(): List<ProductsEntity>
+    fun deleteById(id: UUID)
+    fun findByFamilyId(id: UUID): List<ProductsEntity>
 }
+
+@Profile("!dev")
+interface ProductJpa: JpaRepository<ProductsEntity, Int>, ProductRepository {
+}
+
+
+@Profile("dev")
+class InMemoryProductRepository : ProductRepository {
+    private val products = mutableMapOf<UUID, ProductsEntity>()
+
+    override fun save(product: ProductsEntity): ProductsEntity {
+        products[product.id] = product
+        return product
+    }
+
+    override fun findById(id: UUID): ProductsEntity? {
+        return products[id]
+    }
+
+    override fun findAll(): List<ProductsEntity> {
+        return products.values.toList()
+    }
+
+    override fun deleteById(id: UUID) {
+        products.remove(id)
+    }
+
+    override fun findByFamilyId(id: UUID): List<ProductsEntity> {
+        return products.values.filter { it.family.id == id }
+    }
+}
+
 
 @Entity
 @Table(name = "PRODUCTS")
 data class ProductsEntity(
     @Id
-    val id: String = UUID.randomUUID().toString(),
+    @GeneratedValue
+    val id: UUID = UUID.randomUUID(),
 
     @Column(nullable = false)
     @field:NotBlank(message = "Le nom ne peut pas être vide.")

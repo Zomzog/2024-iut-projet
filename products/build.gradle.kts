@@ -35,7 +35,10 @@ dependencies {
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
-
+	testImplementation ("org.junit.jupiter:junit-jupiter-api:5.7.0")
+	testImplementation ("org.junit.jupiter:junit-jupiter-engine:5.7.0")
+	testImplementation ("org.mockito:mockito-core:3.9.0")
+	testImplementation ("org.mockito.kotlin:mockito-kotlin:3.2.0")
 	testImplementation("com.willowtreeapps.assertk:assertk-jvm:0.28.1")
     testImplementation("io.mockk:mockk:1.13.12")
     testImplementation("com.ninja-squad:springmockk:4.0.2")

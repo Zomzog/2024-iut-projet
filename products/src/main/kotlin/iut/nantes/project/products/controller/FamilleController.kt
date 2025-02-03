@@ -4,22 +4,18 @@ import iut.nantes.project.products.DatabaseProxy
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+import java.util.*
 
 @RestController
 class FamilleController(val db: DatabaseProxy){
     @PostMapping("/api/v1/families")
     fun createFamille(@RequestBody famille: FamilleDto): ResponseEntity<Any> {
-        val violations = db.validateFamille(famille)
-        if (violations.isNotEmpty()) {
-            return ResponseEntity.badRequest().body(violations)
+        val result = db.saveFamille(famille)
+        return if (result != null) {
+            ResponseEntity.status(HttpStatus.CREATED).body(result)
+        } else {
+            ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid family data")
         }
-
-        if (db.findFamilleByName(famille.name) != null) {
-            return ResponseEntity.status(HttpStatus.CONFLICT)
-                .body("Une famille avec le nom '${famille.name}' existe déjà.")
-        }
-
-        db.saveFamille(famille).let { return ResponseEntity.status(HttpStatus.CREATED).body(it) }
     }
 
     @GetMapping("/api/v1/families")
@@ -29,48 +25,41 @@ class FamilleController(val db: DatabaseProxy){
     }
 
     @GetMapping("/api/v1/families/{id}")
-    fun getFamilleById(@PathVariable id: String): ResponseEntity<Any> {
-        if (!(db.isValidUUID(id))){
-            return ResponseEntity.badRequest().body("Format d'id incorrect")
-        }
+    fun getFamilleById(@PathVariable id: UUID): ResponseEntity<Any> {
         val result = db.findFamilleById(id)
         return if (result != null){
             ResponseEntity.status(HttpStatus.OK).body(result)
         }else{
-            ResponseEntity.status(HttpStatus.NOT_FOUND).body("La famille n'existe pas")
+            ResponseEntity.status(HttpStatus.NOT_FOUND).body("Invalid family data")
         }
     }
 
     @PutMapping("/api/v1/families/{id}")
-    fun putFamille(@PathVariable id: String, @RequestBody famille: FamilleDto): ResponseEntity<Any> {
-        if (id != famille.id){
-            return ResponseEntity.badRequest().body("Les IDs de famille ne correspondent pas")
+    fun putFamille(@PathVariable id: UUID, @RequestBody famille: FamilleDto): ResponseEntity<Any> {
+        val updatedFamille = db.updateFamille(id, famille)
+
+        return if (updatedFamille != null) {
+            ResponseEntity.status(HttpStatus.OK).body(updatedFamille)
+        } else {
+            ResponseEntity.status(HttpStatus.BAD_REQUEST).body("La mise à jour a échoué. Vérifiez les données.")
         }
-        if(db.findFamilleById(id)== null){
-            return ResponseEntity.badRequest().body("La famille n'existe pas")
-        }
-        val violations = db.validateFamille(famille)
-        if (violations.isNotEmpty()) {
-            return ResponseEntity.badRequest().body(violations)
-        }
-        if (db.findFamilleByName(famille.name) != null){
-             return ResponseEntity.status(HttpStatus.CONFLICT)
-                .body("Une famille avec le nom '${famille.name}' existe déjà.")
-        }
-        db.saveFamille(famille).let { return ResponseEntity.status(HttpStatus.CREATED).body(it) }
     }
 
+
     @DeleteMapping("/api/v1/families/{id}")
-    fun deleteFamille(@PathVariable id: String): ResponseEntity<Any> {
+    fun deleteFamille(@PathVariable id: UUID): ResponseEntity<Any> {
         val result = db.findFamilleById(id)
-        if (result == null){
+        if (result == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("La famille n'existe pas")
         }
-        if (db.findProductByFamilleId(id) != null){
+
+        if (db.findProductByFamilleId(id).isNotEmpty()) {
             return ResponseEntity.status(HttpStatus.CONFLICT)
                 .body("Au moins 1 produit de cette famille existe encore")
         }
+
         db.deleteFamilleById(id)
+
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("La famille a été supprimée avec succès")
     }
 }
