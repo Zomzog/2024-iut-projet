@@ -8,6 +8,8 @@ import jakarta.validation.constraints.Pattern
 import org.springframework.context.annotation.Profile
 import org.springframework.data.jpa.repository.JpaRepository
 import java.util.*
+import org.springframework.data.jpa.repository.Query
+import org.springframework.data.repository.query.Param
 
 interface ProductRepository {
     fun save(product: ProductsEntity): ProductsEntity
@@ -15,10 +17,25 @@ interface ProductRepository {
     fun findAll(): List<ProductsEntity>
     fun deleteById(id: UUID)
     fun findByFamilyId(id: UUID): List<ProductsEntity>
+    fun findByCriteria(familyName : String?, minPrice: Int?, maxPrice: Int?): List<ProductsEntity>
 }
 
 @Profile("!dev")
 interface ProductJpa: JpaRepository<ProductsEntity, Int>, ProductRepository {
+
+    @Query("""
+        SELECT p 
+        FROM ProductsEntity p 
+        JOIN p.family f
+        WHERE (:familyName IS NULL OR LOWER(f.name) = LOWER(:familyName))
+          AND (:minPrice IS NULL OR p.price.amount >= :minPrice)
+          AND (:maxPrice IS NULL OR p.price.amount <= :maxPrice)
+    """)
+    override fun findByCriteria(
+        @Param("familyName") familyName: String?,
+        @Param("minPrice") minPrice: Int?,
+        @Param("maxPrice") maxPrice: Int?
+    ): List<ProductsEntity>
 }
 
 
@@ -45,6 +62,16 @@ class InMemoryProductRepository : ProductRepository {
 
     override fun findByFamilyId(id: UUID): List<ProductsEntity> {
         return products.values.filter { it.family.id == id }
+    }
+
+    override fun findByCriteria(familyName: String?, minPrice: Int?, maxPrice: Int?): List<ProductsEntity> {
+        return products.values.filter { product ->
+            val matchesFamily = familyName?.let { it.lowercase() == product.family.name.lowercase() } ?: true
+            val matchesMinPrice = minPrice == null || product.price.amount >= minPrice
+            val matchesMaxPrice = maxPrice == null || product.price.amount <= maxPrice
+
+            matchesFamily && matchesMinPrice && matchesMaxPrice
+        }
     }
 }
 

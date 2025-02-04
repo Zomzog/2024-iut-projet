@@ -130,4 +130,11 @@ fun saveFamille(famille: FamilleDto): FamilleDto? {
         val savedEntity = productRepo.save(productEntity)
         return savedEntity.toDto()
     }
+
+    fun findProductsByFamilyNameAndPriceRange(familyName : String?, minPrice: Int?, maxPrice: Int?): List<ProductDto> {
+        if ((minPrice != null && minPrice < 0) || (minPrice != null && maxPrice != null && maxPrice < minPrice)){
+            listOf<ProductDto>()
+        }
+        return productRepo.findByCriteria(familyName, minPrice, maxPrice).map { it.toDto() }
+    }
 }

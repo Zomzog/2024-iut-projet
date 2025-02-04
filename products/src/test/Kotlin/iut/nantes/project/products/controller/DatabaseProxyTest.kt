@@ -6,11 +6,22 @@ import org.springframework.validation.Validator
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
 
+
+@SpringBootTest
+@AutoConfigureMockMvc
+@TestMethodOrder(MethodOrderer.OrderAnnotation::class)
+@Transactional
 class DatabaseProxyTest {
+
+
+    @Autowired
+    lateinit var mockMvc: MockMvc
+
+    @Autowired
+    lateinit var databaseProxy: DatabaseProxy
 
     private lateinit var familleRepo: FamilleRepository
     private lateinit var productRepo: ProductRepository
-    private lateinit var databaseProxy: DatabaseProxy
     private lateinit var familleDto: FamilleDto
 
     @BeforeEach
@@ -24,7 +35,6 @@ class DatabaseProxyTest {
 
         // Initialisation d'un exemple de FamilleDto
         familleDto = FamilleDto(
-            id = "12345",
             name = "FamilleTest",
             description = "Description de test"
         )
