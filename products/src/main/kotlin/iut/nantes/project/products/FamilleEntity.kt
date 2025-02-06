@@ -3,7 +3,6 @@ package iut.nantes.project.products
 import jakarta.persistence.*
 import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.Size
-import org.hibernate.annotations.GenericGenerator
 import org.springframework.context.annotation.Profile
 import org.springframework.data.jpa.repository.JpaRepository
 import java.util.UUID
