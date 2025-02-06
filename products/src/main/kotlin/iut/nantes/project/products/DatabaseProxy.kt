@@ -94,7 +94,7 @@ fun saveFamille(famille: FamilleDto): FamilleDto? {
         }
 
         if (produit.description != null){
-            if (produit.description.isNotBlank() && produit.description.length !in 5..100) {
+            if (produit.description!!.isNotBlank() && produit.description!!.length !in 5..100) {
                 errors.add("La description doit contenir entre 5 et 100 caractères.")
             }
         }
@@ -136,5 +136,34 @@ fun saveFamille(famille: FamilleDto): FamilleDto? {
             listOf<ProductDto>()
         }
         return productRepo.findByCriteria(familyName, minPrice, maxPrice).map { it.toDto() }
+    }
+
+    fun findProductById(id: UUID): ProductDto? {
+        if (!(isValidUUID(id))){
+            return null
+        }
+        return productRepo.findById(id)?.toDto()
+    }
+
+
+    fun updateProduct(id: UUID, product: ProductDto): ProductDto? {
+        val existingFamille = findFamilleById(product.family.id!!)
+        if (existingFamille == null) {
+            return null
+        }
+
+        val existingProduct = findProductById(product.id!!)
+
+        if (existingProduct != null && existingProduct.id != id) {
+            return null
+        }
+
+        existingProduct!!.name = product.name
+        existingProduct.description = product.description
+        existingProduct.price = product.price
+        existingProduct.family = product.family
+
+        val updatedProduct = productRepo.save(existingProduct.toEntity())
+        return updatedProduct.toDto()
     }
 }

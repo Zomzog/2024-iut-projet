@@ -14,7 +14,7 @@ class FamilleController(val db: DatabaseProxy){
         return if (result != null) {
             ResponseEntity.status(HttpStatus.CREATED).body(result)
         } else {
-            ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid family data")
+            ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Données de produit invalides")
         }
     }
 
@@ -30,7 +30,7 @@ class FamilleController(val db: DatabaseProxy){
         return if (result != null){
             ResponseEntity.status(HttpStatus.OK).body(result)
         }else{
-            ResponseEntity.status(HttpStatus.NOT_FOUND).body("Invalid family data")
+            ResponseEntity.status(HttpStatus.NOT_FOUND).body("Données de famille invalides")
         }
     }
 

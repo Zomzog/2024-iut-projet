@@ -4,6 +4,6 @@ import iut.nantes.project.products.Price
 import java.util.*
 
 
-data class ProductDto(val id: UUID?, val name: String, val description: String?, val price: Price, val family: FamilleDto) {
+data class ProductDto(val id: UUID?, var name: String, var description: String?, var price: Price, var family: FamilleDto) {
 }
 
