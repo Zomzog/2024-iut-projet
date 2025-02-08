@@ -33,7 +33,6 @@ class GlobalExceptionHandler {
         IllegalArgumentException::class,
         ContactException.InvalidDataException::class,
         StoreException.InvalidDataException::class,
-        StoreException.InvalidIdFormatException::class,
         HttpMessageNotReadableException::class)
     fun handleIncorrectArgument(ex: Exception): ResponseEntity<String> {
         return ResponseEntity(ex.message, HttpStatus.BAD_REQUEST)
