@@ -11,6 +11,7 @@ import iut.nantes.project.stores.Exception.StoreException
 import iut.nantes.project.stores.Repository.ContactRepository
 import iut.nantes.project.stores.Repository.StoreRepository
 import org.springframework.stereotype.Service
+import org.springframework.web.reactive.function.client.WebClientResponseException
 import java.util.UUID
 
 
@@ -76,45 +77,47 @@ class StoreService(
     }
 
 
-    fun removeProductFromStore(storeId: Int, productId: UUID, quantity: Int?): ProductStoreDTO {
+    fun removeProductFromStore(storeId: Int, productId: UUID, quantity: Int): ProductStoreDTO {
         val store = storeRepository.findById(storeId)
             .orElseThrow { StoreException.StoreNotFoundException() }
 
         val productInStore = store.products.find { it.id == productId }
             ?: throw ProductException.ProductNotFoundException()
 
-        val qtyToRemove = quantity ?: 1
-        if (qtyToRemove <= 0) throw IllegalArgumentException("La quantité doit être positive.")
+        if (quantity <= 0) throw IllegalArgumentException("La quantité doit être positive.")
 
-        if (productInStore.quantity < qtyToRemove) {
+        if (productInStore.quantity < quantity) {
             throw IllegalStateException("Le stock final ne peut pas être inférieur à zéro.")
         }
 
-        productInStore.quantity -= qtyToRemove
+        productInStore.quantity -= quantity
         storeRepository.save(store)
         return productInStore.toDTO()
     }
 
 
-    fun addProductToStore(storeId: Int, productId: UUID, quantity: Int?): ProductStoreDTO {
+    fun addProductToStore(storeId: Int, productId: UUID, quantity: Int): ProductStoreDTO {
         val store = storeRepository.findById(storeId)
             .orElseThrow { StoreException.StoreNotFoundException() }
 
-        val product = webClientServiceProduct.getProductInfo(productId.toString())
+        val product = try {
+            webClientServiceProduct.getProductInfo(productId.toString())
+        } catch (e: ProductException.ProductNotFoundException) {
+            throw StoreException.InvalidDataException()
+        }
 
 
-        val qtyToAdd = quantity ?: 1
-        if (qtyToAdd <= 0) throw IllegalArgumentException("La quantité doit être positive.")
+        if (quantity <= 0) throw IllegalArgumentException("La quantité doit être positive.")
 
         val productInStore = store.products.find { it.id == productId }
 
         if (productInStore != null) {
-            productInStore.quantity += qtyToAdd
+            productInStore.quantity += quantity
         } else {
             val newProductStoreEntity = ProductStoreEntity(
                 id = product.id!!,
                 name = product.name,
-                quantity = qtyToAdd,
+                quantity = quantity,
                 store = store
             )
             store.products.add(newProductStoreEntity)
@@ -124,7 +127,7 @@ class StoreService(
         return store.products.find { it.id == productId }!!.toDTO()
     }
 
-    fun deleteProductsFromStore(storeId: Int, productIds: List<String>) {
+    fun deleteProductsFromStore(storeId: Int, productIds: List<UUID>) {
         val store = storeRepository.findById(storeId)
             .orElseThrow { StoreException.StoreNotFoundException() }
 
@@ -133,7 +136,7 @@ class StoreService(
         }
 
         productIds.forEach { productId ->
-            val productInStore = store.products.find { it.id.toString() == productId }
+            val productInStore = store.products.find { it.id == productId }
             if (productInStore != null) {
                 store.products.remove(productInStore)
             }

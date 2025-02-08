@@ -33,6 +33,7 @@ class StoreController(private val storeService: StoreService) {
         return storeService.updateStore(id, storeDTO)
     }
 
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/{id}")
     fun deleteStore(@PathVariable id: Int) {
         storeService.deleteStore(id)
@@ -42,8 +43,9 @@ class StoreController(private val storeService: StoreService) {
     fun addProductToStore(
         @PathVariable storeId: Int,
         @PathVariable productId: UUID,
-        @RequestParam(required = false) quantity: Int?
+        @RequestParam(required = false, defaultValue = "1") quantity: Int
     ): ProductStoreDTO {
+        println("hey")
         return storeService.addProductToStore(storeId, productId, quantity)
     }
 
@@ -51,15 +53,16 @@ class StoreController(private val storeService: StoreService) {
     fun removeProductFromStore(
         @PathVariable storeId: Int,
         @PathVariable productId: UUID,
-        @RequestParam(required = false) quantity: Int?
+        @RequestParam(required = false, defaultValue = "1") quantity: Int
     ): ProductStoreDTO {
         return storeService.removeProductFromStore(storeId, productId, quantity)
     }
 
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/{storeId}/products")
     fun deleteProductsFromStore(
         @PathVariable storeId: Int,
-        @RequestBody productIds: List<String>
+        @RequestBody productIds: List<UUID>
     ) {
         storeService.deleteProductsFromStore(storeId, productIds)
     }
